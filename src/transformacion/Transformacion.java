@@ -1,0 +1,72 @@
+package transformacion;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import utils.Matriz2D;
+
+
+public abstract class Transformacion {
+	public static final double[] GRAY_ARRAY={0.2989,0.5870,0.1140};
+	
+    public abstract int aplicar(BufferedImage origen,int x,int y);
+    
+    public BufferedImage transformar(BufferedImage origen){
+    	BufferedImage destino= new BufferedImage(origen.getWidth(), origen.getHeight(), origen.getType());
+    	
+    	Matriz2D<Integer> total = new Matriz2D<Integer>(origen.getWidth(),origen.getHeight()); 
+    	int max=0;
+    	int min=9999;
+    	int value;
+    	for(int i=0;i<origen.getWidth();i++){
+    		for(int j=0;j<origen.getHeight();j++){
+    			value=aplicar(origen,i,j);
+    			total.elementAt(i,j,value);
+    			//value=total.elementAt(i).elementAt(j);
+    			if(value>max) max=value;
+    			if(value<min) min=value;
+    		}
+    	}
+    	
+    	int grey;
+    	
+    	double A=255;
+    	double B=0;
+    	if(max==min){
+    		A=0;
+    		B=128;
+    	}
+    	else{
+    		A/=(max-min);
+    		B=-A*min;
+    	}
+    	
+    	double valor=0;
+    	for(int i=0;i<origen.getWidth();i++)
+    		for(int j=0;j<origen.getHeight();j++){
+    			grey = (total.elementAt(i,j));
+    			valor=grey*A+B;
+    			grey=(int)valor;
+    			Color c= new Color(grey,grey,grey);
+    			destino.setRGB(i,j,c.getRGB());
+    		}
+    	
+    	return destino;
+    }
+    
+    public static BufferedImage toGrey(BufferedImage origen){
+    	Color greyColor;
+    	
+    	BufferedImage destino= new BufferedImage(origen.getWidth(), origen.getHeight(), origen.getType());
+    	int color;
+    	for(int i=0;i<origen.getWidth();i++)
+    		for(int j=0;j<origen.getHeight();j++){
+    			color = origen.getRGB(i, j);
+    			greyColor = new Color(color);
+    			color =(int)(greyColor.getRed()*GRAY_ARRAY[0]+greyColor.getGreen()*GRAY_ARRAY[1]+greyColor.getBlue()*GRAY_ARRAY[2]);
+    			destino.setRGB(i,j,new Color(color,color,color).getRGB());
+    		}
+    	
+		return destino;
+    	
+    }
+}
