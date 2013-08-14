@@ -7,9 +7,9 @@ public class Erosion extends OpMorfologico {
 	public boolean cumple(Color c) {return (c.getBlue() < BLANCO);}
 	
 	@Override
-	public int loadDefault() {return NEGRO;}
+	public int loadDefault() {return BLANCO;}
 
 	@Override
-	public int loadNonDefault() {return BLANCO;}
+	public int loadNonDefault() {return NEGRO;}
 
 }
