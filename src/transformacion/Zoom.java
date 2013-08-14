@@ -12,33 +12,43 @@ import java.awt.image.ColorConvertOp;
 
 public class Zoom extends Transformacion {
 
-	private int porcentaje;
+	private int porcentajeX;
+	private int porcentajeY;
 	
 	public Zoom(int muestreo){
-		this.setPorcentaje(muestreo);
+		this.setPorcentajeX(muestreo);
+		this.setPorcentajeY(muestreo);
+		
+	}
+	public Zoom(int muestreoX,int muestreoY){
+		this.setPorcentajeX(muestreoX);
+		this.setPorcentajeY(muestreoY);
 		
 	}
 	
 	
+	public void setPorcentajeY(int y){
+		this.porcentajeY=y;
+	}
 	
 	public Point pointFromOriginal(int row,int col){
 		Point p= new Point();
 		
-		p.x=(row*porcentaje)/100;
-		p.y=(col*porcentaje)/100;
+		p.x=(row*porcentajeX)/100;
+		p.y=(col*porcentajeY)/100;
 		
 		return p;
 	}
 	
-	public void setPorcentaje(int ptje){
-		porcentaje=ptje;
+	public void setPorcentajeX(int x){
+		this.porcentajeX=x;
 	}
 	
 	public Point pointFromDestiny(int row,int col){
 		Point p= new Point();
 		
-		p.x=(row*100)/porcentaje;
-		p.y=(col*100)/porcentaje;
+		p.x=(row*100)/porcentajeX;
+		p.y=(col*100)/porcentajeY;
 	
 		return p;
 	}
@@ -47,8 +57,8 @@ public class Zoom extends Transformacion {
 	public BufferedImage transformar(BufferedImage original){
 		
 		BufferedImage modificada;
-		int width=(original.getWidth()*porcentaje)/100;
-		int height=(original.getHeight()*porcentaje)/100;
+		int width=(original.getWidth()*porcentajeX)/100;
+		int height=(original.getHeight()*porcentajeY)/100;
 		
 		modificada = new BufferedImage(width, height, original.getType());
 		for(int i=0;i<width;i++)

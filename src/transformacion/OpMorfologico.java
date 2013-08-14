@@ -17,8 +17,10 @@ public abstract class OpMorfologico extends Transformacion {
 		for(int i=x-1;i<=x+1;i++){
 			for(int j=y-1;j<=y+1;j++){
 				if(!OutOfBounds(origen,i,j)){
-					Color color= new Color(origen.getRGB(i, j));
-					if(cumple(color)) return loadNonDefault(); 
+					if(i!=x && j!=y){
+						Color color= new Color(origen.getRGB(i, j));
+						if(cumple(color)) return loadNonDefault(); 
+					}
 				}
 			}
 		}
@@ -26,11 +28,5 @@ public abstract class OpMorfologico extends Transformacion {
 	}
 	
 
-	public boolean OutOfBounds(BufferedImage img,int i,int j){
-		if(i<0 || j<0) return true;
-		
-		if(i>=img.getWidth() || j>=img.getHeight()) return true;
-		
-		return false;
-	}
+	
 }

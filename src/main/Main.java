@@ -59,7 +59,6 @@ public class Main {
 		
 		BufferedImage transformada;// = bordes.transformar(img2);
 		BufferedImage umbralada;
-		BufferedImage erosionada;
 		/*
 		//Eliminacion del ruido
 		Float[] RUIDO ={1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f};
@@ -67,18 +66,26 @@ public class Main {
 		BufferedImage transformada = bordes.transformar(img);
 		*/
 		
-		/* Zoom z= new Zoom(25);
-		transformada = z.transformar(img2);
+		 Zoom z= new Zoom(50);
+		 CambiadorMuestreo cam = new CambiadorMuestreo(800, 600);
+		transformada = cam.transformar(img2);
+		
 		transformada = bordes.transformar(transformada);
-		*/
-		transformada = bordes.transformar(img2);
-		Umbralador umbral = new Umbralador(30);
-		umbralada = umbral.transformar(transformada);
+		Umbralador umbral = new Umbralador(100);
+		transformada = umbral.transformar(transformada);
 		Erosion erosion = new Erosion();
-		erosionada = erosion.transformar(umbralada);
+		transformada = erosion.transformar(transformada);
+		//transformada = erosion.transformar(transformada);
+		//transformada = erosion.transformar(transformada);
+		
 		Dilatacion dil = new Dilatacion();
-		erosionada = dil.transformar(erosionada);
-		DibujadorImagenes DI = new DibujadorImagenes(erosionada);
+		transformada = dil.transformar(transformada);
+		transformada = dil.transformar(transformada);
+		transformada = dil.transformar(transformada);
+		//transformada = dil.transformar(transformada);
+		
+		
+		DibujadorImagenes DI = new DibujadorImagenes(transformada);
 		
 		
 		//HSV 
