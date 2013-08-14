@@ -3,19 +3,19 @@ package transformacion;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-
+/**
+ * Umbralador utiliza una variable entera internamente. Si un valor de un pixel es menor a él cambia el valor a 0. Si el valor
+ * es mayor lo cambia  a 255.
+ * @author Ibrian
+ *
+ */
 public class Umbralador extends Transformacion {
 
 	private int umbral;
-	private BufferedImage imagen;
-	
-	private BufferedImage destino;
-	
-	public Umbralador(int umbral, BufferedImage img){
+		
+	public Umbralador(int umbral){
 		this.umbral=umbral;
-		this.imagen = img;
 	}
-	
 	
 	@Override
 	public int aplicar(BufferedImage origen, int x, int y) {
@@ -23,35 +23,11 @@ public class Umbralador extends Transformacion {
 		return (color.getRed() < umbral)?  0: 255;
 	}
 
-
 	public int getUmbral() {
 		return umbral;
 	}
 
-
 	public void setUmbral(int umbral) {
 		this.umbral = umbral;
-		
-		this.destino = this.transformar(imagen);
 	}
-
-
-	public BufferedImage getImagen() {
-		return imagen;
-
-	}
-
-
-	public void setImagen(BufferedImage imagen) {
-		this.imagen = imagen;
-
-		this.destino = this.transformar(imagen);
-	}
-	
-	public BufferedImage getDestino(){
-	
-		return destino;
-	}
-	
-
 }
