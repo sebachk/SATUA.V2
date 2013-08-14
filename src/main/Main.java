@@ -65,9 +65,9 @@ public class Main {
 		ConvolucionFloat bordes = new ConvolucionFloat(RUIDO);
 		BufferedImage transformada = bordes.transformar(img);
 		*/
-		Zoom z= new Zoom(img2,25);
-		transformada = z.transformar(z.getOriginal());
-		transformada = bordes.transformar(z.getModificada());
+		Zoom z= new Zoom(25);
+		transformada = z.transformar(img2);
+		transformada = bordes.transformar(transformada);
 		
 		//transformada = bordes.transformar(img2);
 		DibujadorImagenes DI = new DibujadorImagenes(transformada);

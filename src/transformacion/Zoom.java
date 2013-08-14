@@ -14,48 +14,12 @@ public class Zoom extends Transformacion {
 
 	private int porcentaje;
 	
-	private BufferedImage original;
-	private BufferedImage modificada;
-	
-	public Zoom(BufferedImage buf,int muestreo){
-		original=buf;
+	public Zoom(int muestreo){
 		this.setPorcentaje(muestreo);
 		
 	}
 	
-	public BufferedImage getModificada(){
-		return modificada;
-	}
 	
-	public BufferedImage getOriginal(){
-		return original;
-	}
-	
-	private void promediar(int fila,int col, int ancho,int alto){
-		double valor=0;
-		int prom=ancho*alto;
-		Color c;
-		
-		for(int i=0;i<ancho;i++)
-			for(int j=0;j<alto;j++){
-				int colorin=original.getRGB(fila+i, col+j);
-				c= new Color(colorin);
-				
-				int r,g,b;
-				r=c.getRed();
-				g=c.getGreen();
-				b=c.getBlue();
-				valor+=r*0.299+g*0.587+b*0.114;
-		}
-		
-		prom=(int) Math.round(valor/prom);
-		
-		c=new Color(prom,prom,prom,255);
-		for(int i=0;i<ancho;i++)
-			for(int j=0;j<alto;j++){
-				modificada.setRGB(fila+i,col+j,c.getRGB());
-		}
-	}
 	
 	public Point pointFromOriginal(int row,int col){
 		Point p= new Point();
@@ -68,8 +32,6 @@ public class Zoom extends Transformacion {
 	
 	public void setPorcentaje(int ptje){
 		porcentaje=ptje;
-		System.out.println(porcentaje);
-		modificada= new BufferedImage((original.getWidth()*porcentaje)/100, (original.getHeight()*porcentaje)/100, original.getType());
 	}
 	
 	public Point pointFromDestiny(int row,int col){
@@ -82,28 +44,25 @@ public class Zoom extends Transformacion {
 	}
 	
 	@Override
-	public BufferedImage transformar(BufferedImage origen){
+	public BufferedImage transformar(BufferedImage original){
 		
+		BufferedImage modificada;
 		int width=(original.getWidth()*porcentaje)/100;
 		int height=(original.getHeight()*porcentaje)/100;
 		
-		Point point;
+		modificada = new BufferedImage(width, height, original.getType());
 		for(int i=0;i<width;i++)
 			for(int j=0;j<height;j++){
-				point = this.pointFromDestiny(i,j);
-				int rgb=original.getRGB(point.x, point.y);
+				int rgb= aplicar(original,i,j);
 				modificada.setRGB(i, j, rgb);
 			}
-		return this.modificada;
+		return modificada;
 	}
 
 	@Override
 	public int aplicar(BufferedImage origen, int x, int y) {
 		// TODO Auto-generated method stub
-		return 0;
+		Point point = this.pointFromDestiny(x,y);
+		return origen.getRGB(point.x, point.y);
 	}
-	
-	
-	
-	
 }
