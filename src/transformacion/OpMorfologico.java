@@ -14,8 +14,8 @@ public abstract class OpMorfologico extends Transformacion {
 	public OpMorfologico(){}
 	@Override
 	public int aplicar(BufferedImage origen, int x, int y) {
-		for(int i=x-1;i<=x+1;x++){
-			for(int j=y-1;j<=j+1;j++){
+		for(int i=x-1;i<=x+1;i++){
+			for(int j=y-1;j<=y+1;j++){
 				if(!OutOfBounds(origen,i,j)){
 					Color color= new Color(origen.getRGB(i, j));
 					if(cumple(color)) return loadNonDefault(); 

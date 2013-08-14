@@ -76,6 +76,8 @@ public class Main {
 		umbralada = umbral.transformar(transformada);
 		Erosion erosion = new Erosion();
 		erosionada = erosion.transformar(umbralada);
+		Dilatacion dil = new Dilatacion();
+		erosionada = dil.transformar(erosionada);
 		DibujadorImagenes DI = new DibujadorImagenes(erosionada);
 		
 		
