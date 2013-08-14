@@ -16,7 +16,7 @@ public class Umbralador extends Transformacion {
 	public Umbralador(int umbral){
 		this.umbral=umbral;
 	}
-	
+	 
 	@Override
 	public int aplicar(BufferedImage origen, int x, int y) {
 		Color color= new Color(origen.getRGB(x, y));

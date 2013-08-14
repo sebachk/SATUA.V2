@@ -58,19 +58,25 @@ public class Main {
 		bordes.setElement(VERI);
 		
 		BufferedImage transformada;// = bordes.transformar(img2);
-		
+		BufferedImage umbralada;
+		BufferedImage erosionada;
 		/*
 		//Eliminacion del ruido
 		Float[] RUIDO ={1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f};
 		ConvolucionFloat bordes = new ConvolucionFloat(RUIDO);
 		BufferedImage transformada = bordes.transformar(img);
 		*/
-		Zoom z= new Zoom(25);
+		
+		/* Zoom z= new Zoom(25);
 		transformada = z.transformar(img2);
 		transformada = bordes.transformar(transformada);
-		
-		//transformada = bordes.transformar(img2);
-		DibujadorImagenes DI = new DibujadorImagenes(transformada);
+		*/
+		transformada = bordes.transformar(img2);
+		Umbralador umbral = new Umbralador(30);
+		umbralada = umbral.transformar(transformada);
+		Erosion erosion = new Erosion();
+		erosionada = erosion.transformar(umbralada);
+		DibujadorImagenes DI = new DibujadorImagenes(erosionada);
 		
 		
 		//HSV 

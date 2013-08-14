@@ -10,6 +10,11 @@ public abstract class Transformacion {
 	
     public abstract int aplicar(BufferedImage origen,int x,int y);
     
+    /**
+     * Recorre una imagen pixel a pixel y para cada uno de ellos aplica una funcion dada por los hijos de la clase
+     * @param origen
+     * @return
+     */
     public BufferedImage transformar(BufferedImage origen){
     	BufferedImage destino= new BufferedImage(origen.getWidth(), origen.getHeight(), origen.getType());
     	
