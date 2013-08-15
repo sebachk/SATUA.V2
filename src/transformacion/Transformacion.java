@@ -39,6 +39,11 @@ public abstract class Transformacion {
     	
     	double A=255;
     	double B=0;
+    	
+    	if(min>0 && min<=255)
+    		min=0;
+    	if(max<255 && max>=0)
+    		max=255;
     	if(max==min){
     		A=0;
     		B=128;
@@ -47,6 +52,7 @@ public abstract class Transformacion {
     		A/=(max-min);
     		B=-A*min;
     	}
+    	
     	
     	double valor=0;
     	for(int i=0;i<origen.getWidth();i++)

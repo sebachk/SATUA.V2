@@ -75,12 +75,12 @@ public class Main {
 		transformada = umbral.transformar(transformada);
 		Erosion erosion = new Erosion();
 		transformada = erosion.transformar(transformada);
-		//transformada = erosion.transformar(transformada);
-		//transformada = erosion.transformar(transformada);
+		transformada = erosion.transformar(transformada);
+		transformada = erosion.transformar(transformada);
 		
 		Dilatacion dil = new Dilatacion();
 		transformada = dil.transformar(transformada);
-		//transformada = dil.transformar(transformada);
+		transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		
