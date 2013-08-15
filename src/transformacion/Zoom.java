@@ -12,8 +12,8 @@ import java.awt.image.ColorConvertOp;
 
 public class Zoom extends Transformacion {
 
-	private int porcentajeX;
-	private int porcentajeY;
+	protected int porcentajeX;
+	protected int porcentajeY;
 	
 	public Zoom(int muestreo){
 		this.setPorcentajeX(muestreo);

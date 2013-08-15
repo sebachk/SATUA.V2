@@ -1,11 +1,13 @@
 package transformacion;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
 
 public abstract class OpMorfologico extends Transformacion {
-	protected int BLANCO = 255;
-	protected int NEGRO = 0;
+	protected final int BLANCO = 255;
+	protected final int NEGRO = 0;
 	
 	public abstract boolean cumple(Color c);
 	public abstract int loadDefault();
@@ -14,16 +16,16 @@ public abstract class OpMorfologico extends Transformacion {
 	public OpMorfologico(){}
 	@Override
 	public int aplicar(BufferedImage origen, int x, int y) {
-		for(int i=x-1;i<=x+1;i++){
-			for(int j=y-1;j<=y+1;j++){
-				if(!OutOfBounds(origen,i,j)){
-					if(i!=x && j!=y){
-						Color color= new Color(origen.getRGB(i, j));
-						if(cumple(color)) return loadNonDefault(); 
-					}
-				}
-			}
+		Vector<Point> vec = this.vecinos(origen, x, y);
+		Point p;
+		for(int i=0;i<vec.size();i++){
+			p=vec.elementAt(i);
+			Color color= new Color(origen.getRGB(p.x, p.y));
+			if(cumple(color)) return loadNonDefault(); 
 		}
+		
+	
+
 		return loadDefault();
 	}
 	

@@ -17,6 +17,9 @@ public class CambiadorMuestreo extends Zoom {
 	{
 		setPorcentajeX(muestreo.x*100/original.getWidth());
 		setPorcentajeY(muestreo.y*100/original.getHeight());
+		System.out.println(this.porcentajeX);
+		System.out.println(this.porcentajeY);
+		
 		return super.transformar(original);
 	}
 	

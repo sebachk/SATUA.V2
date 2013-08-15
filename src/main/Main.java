@@ -66,12 +66,12 @@ public class Main {
 		BufferedImage transformada = bordes.transformar(img);
 		*/
 		
-		 Zoom z= new Zoom(50);
-		 CambiadorMuestreo cam = new CambiadorMuestreo(800, 600);
-		transformada = cam.transformar(img2);
+		Zoom z= new Zoom(30);
+		CambiadorMuestreo cam = new CambiadorMuestreo(800, 600);
+		transformada = z.transformar(img2);
 		
 		transformada = bordes.transformar(transformada);
-		Umbralador umbral = new Umbralador(100);
+		Umbralador umbral = new Umbralador(50);
 		transformada = umbral.transformar(transformada);
 		Erosion erosion = new Erosion();
 		transformada = erosion.transformar(transformada);
@@ -80,8 +80,8 @@ public class Main {
 		
 		Dilatacion dil = new Dilatacion();
 		transformada = dil.transformar(transformada);
-		transformada = dil.transformar(transformada);
-		transformada = dil.transformar(transformada);
+		//transformada = dil.transformar(transformada);
+		//transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		
 		

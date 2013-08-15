@@ -1,7 +1,10 @@
 package transformacion;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
+
 import utils.Matriz2D;
 
 
@@ -82,4 +85,20 @@ public abstract class Transformacion {
 		
 		return false;
 	}
+    
+    public Vector<Point> vecinos (BufferedImage img, int x, int y){
+    	Vector<Point> res = new Vector<Point>();
+    	
+    	for(int i=0;i<3;i++)
+    		for(int j=0;j<3;j++){
+    			if(i!=1 || j!=1)
+    			if(! OutOfBounds(img, x-1+i, y-1+j))
+    				res.add(new Point(x-1+i,y-1+j));
+    		}
+    	
+    	return res;
+    }
+    
+    
+    
 }
