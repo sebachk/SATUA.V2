@@ -43,6 +43,23 @@ public class Main {
 			System.out.println("Fallo la carga de la imagen");
 		}
 		
+		BufferedImage salida = new BufferedImage(img.getWidth(),img.getHeight(),img.getType());
+		
+		for(int i=0;i<img.getWidth();i++)
+			for(int j=0;j<img.getHeight();j++){{
+					salida.setRGB(i, j, img.getRGB(i, j)&0X00FFFFFF);
+				}
+			}
+		try {
+			ImageIO.write(img,"png", new File("trans.png"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			System.out.println("FALLA");
+			e1.printStackTrace();
+		}
+		
+		
+		
 		//Transformacion SOBEL
 		Integer[] HOR ={1,2,1,0,0,0,-1,-2,-1};
 		Integer[] VER ={-1,0,1,-2,0,2,-1,0,1};
@@ -57,7 +74,7 @@ public class Main {
 		bordes.setElement(HORI);
 		bordes.setElement(VERI);
 		
-		BufferedImage transformada;// = bordes.transformar(img2);
+		BufferedImage transformada= bordes.transformar(img2);
 		BufferedImage umbralada;
 		/*
 		//Eliminacion del ruido
@@ -67,20 +84,20 @@ public class Main {
 		*/
 		
 		Zoom z= new Zoom(30);
-		CambiadorMuestreo cam = new CambiadorMuestreo(800, 600);
-		transformada = z.transformar(img2);
+		CambiadorMuestreo cam = new CambiadorMuestreo(1024, 768);
+		transformada = cam.transformar(transformada);
 		
 		transformada = bordes.transformar(transformada);
-		Umbralador umbral = new Umbralador(50);
-		transformada = umbral.transformar(transformada);
+		Umbralador umbral = new Umbralador(60);
+		//transformada = umbral.transformar(transformada);
 		Erosion erosion = new Erosion();
-		transformada = erosion.transformar(transformada);
-		transformada = erosion.transformar(transformada);
-		transformada = erosion.transformar(transformada);
+		//transformada = erosion.transformar(transformada);
+		//transformada = erosion.transformar(transformada);
+		//transformada = erosion.transformar(transformada);
 		
 		Dilatacion dil = new Dilatacion();
-		transformada = dil.transformar(transformada);
-		transformada = dil.transformar(transformada);
+		//transformada = dil.transformar(transformada);
+		//transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		

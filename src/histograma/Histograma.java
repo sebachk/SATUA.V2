@@ -79,7 +79,10 @@ public abstract class Histograma extends Component{
 		g.drawString("0", x, y+12);
 		g.drawString("128",x+128,y+12);
 		g.drawString("255", x+255, y+12);
-		g.drawString(moda+"", x-20, y-altura);
+		g.drawString("10", x+10, y+12);
+		g.drawString("20",x+20,y+12);
+		g.drawString("30", x+30, y+12);
+		g.drawString("Moda:"+moda+"", x, y+40);
 	}
 	
 	
