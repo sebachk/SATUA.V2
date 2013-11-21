@@ -20,7 +20,9 @@ import javax.swing.JFrame;
 
 import Herramientas.DibujadorImagenes;
 import Herramientas.ImageHSV;
-import Herramientas.Segmento;
+import Herramientas.Objeto;
+import Herramientas.ObjetoRectangular;
+import Herramientas.Segmentador;
 
 import transformacion.*;
 
@@ -31,35 +33,44 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		BufferedImage img=null;
-		BufferedImage img2=null;
-		
+		BufferedImage imgOriginal=null;
+		BufferedImage imgGris=null;
+	
+		/**Abro y transformo**/
 		try {
-			img = ImageIO.read(new File("FondoNegro.jpg"));
-			img2 = Transformacion.toGrey(img);
+			imgOriginal = ImageIO.read(new File("FondoNegro.jpg"));
+			imgGris = Transformacion.toGrey(imgOriginal);
 			//ImageIO.write(img2, "jpg", new File("imagbyn.jpg"));
 			
 		} catch (IOException e) {
 			System.out.println("Fallo la carga de la imagen");
 		}
 		
-		BufferedImage salida = new BufferedImage(img.getWidth(),img.getHeight(),img.getType());
-		
-		for(int i=0;i<img.getWidth();i++)
-			for(int j=0;j<img.getHeight();j++){{
-					salida.setRGB(i, j, img.getRGB(i, j)&0X00FFFFFF);
+		/** Creo el archivo de salida con la imagen en gris**/
+		BufferedImage salida = new BufferedImage(imgOriginal.getWidth(),imgOriginal.getHeight(),imgOriginal.getType());
+		for(int i=0;i<imgOriginal.getWidth();i++)
+			for(int j=0;j<imgOriginal.getHeight();j++){{
+					salida.setRGB(i, j, imgGris.getRGB(i, j)&0X00FFFFFF);
 				}
 			}
 		try {
-			ImageIO.write(img,"png", new File("trans.png"));
+			ImageIO.write(imgOriginal,"png", new File("trans.png"));
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("FALLA");
 			e1.printStackTrace();
 		}
+		BufferedImage transformada;
+		
+		/**Cambio el muestreo de la imagen**/
+		CambiadorMuestreo cam = new CambiadorMuestreo(800, 600);
+		transformada = cam.transformar(imgGris);
+		
+		/** Elimino ruido*/
+		transformada = new ReductorRuido().transformar(transformada);
 		
 		
-		
+		/** Obtencion de Bordes**/
 		//Transformacion SOBEL
 		Integer[] HOR ={1,2,1,0,0,0,-1,-2,-1};
 		Integer[] VER ={-1,0,1,-2,0,2,-1,0,1};
@@ -67,42 +78,39 @@ public class Main {
 		Integer[] HORI ={-1,-2,-1,0,0,0,1,2,1};
 		Integer[] VERI ={1,0,-1,2,0,-2,1,0,-1};
 		
-		
-		
 		Convolucion bordes = new Convolucion(HOR);
 		bordes.setElement(VER);
 		bordes.setElement(HORI);
 		bordes.setElement(VERI);
 		
-		BufferedImage transformada= bordes.transformar(img2);
-		BufferedImage umbralada;
-		/*
-		//Eliminacion del ruido
-		Float[] RUIDO ={1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f,1/9f};
-		ConvolucionFloat bordes = new ConvolucionFloat(RUIDO);
-		BufferedImage transformada = bordes.transformar(img);
-		*/
-		
-		Zoom z= new Zoom(30);
-		CambiadorMuestreo cam = new CambiadorMuestreo(1024, 768);
-		transformada = cam.transformar(transformada);
 		
 		transformada = bordes.transformar(transformada);
-		Umbralador umbral = new Umbralador(60);
-		//transformada = umbral.transformar(transformada);
+		
+		
+		
+		/** Calculo el histograma*/
+		HistogramaBlue hb= new HistogramaBlue(transformada);
+		
+		
+		/** Umbralo*/
+		Segmentador.visitados=new boolean[transformada.getWidth()][transformada.getHeight()];
+		Umbralador umbral = new Umbralador(hb.getpercentil());
+		transformada = umbral.transformar(transformada);
+		
+		
+		/** Erosion y dilatacion para discriminar los objetos de los No objetos*/
 		Erosion erosion = new Erosion();
-		//transformada = erosion.transformar(transformada);
+		transformada = erosion.transformar(transformada);
 		//transformada = erosion.transformar(transformada);
 		//transformada = erosion.transformar(transformada);
 		
 		Dilatacion dil = new Dilatacion();
-		//transformada = dil.transformar(transformada);
+		transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		//transformada = dil.transformar(transformada);
 		
 		
-		DibujadorImagenes DI = new DibujadorImagenes(transformada);
 		
 		
 		//HSV 
@@ -110,20 +118,32 @@ public class Main {
 		//HistogramaMatricial H = new HistogramaMatricial(pepe.getH());
 		//H.setUbicacion(10,400);
 		
-		HistogramaBlue hb= new HistogramaBlue(transformada);
-	
-		/*
-		Segmento seg = new Segmento(transformada);
-		Vector<Point> LP = seg.getSegmento();
-		BufferedImage imgsmt = new BufferedImage(img.getWidth(),img.getHeight(),img.getType());
-		Point p;
-		System.out.println("TRASPASO");
-		for(int i=0;i<LP.size();i++){
-			p=LP.elementAt(i);
-			imgsmt.setRGB(p.x, p.y, img.getRGB(p.x, p.y));
-		}
-		DibujadorImagenes DI = new DibujadorImagenes(imgsmt);
-		*/
+		
+		/** Segmentar la imagen*/
+		System.out.println("EMPEZANDO A SEGMENTAR");
+		Segmentador seg = new Segmentador();
+		seg.segmentar(transformada);
+		ObjetoRectangular objRect= new ObjetoRectangular();
+		objRect.fusionar(seg.getMayor());
+		System.out.println("EMPEZANDO A DIBUJAR");
+		transformada = objRect.dibujar(imgOriginal, imgOriginal.getWidth(), imgOriginal.getHeight());
+		System.out.println("FIN DEL DIBUJADOR");
+//		Segmento seg = new Segmento(transformada);
+//		Vector<Point> LP = seg.getSegmento();
+//		BufferedImage imgsmt = new BufferedImage(imgOriginal.getWidth(),imgOriginal.getHeight(),imgOriginal.getType());
+//		Point p;
+//		System.out.println("TRASPASO");
+//		for(int i=0;i<LP.size();i++){
+//			p=LP.elementAt(i);
+//			imgsmt.setRGB(p.x, p.y, imgOriginal.getRGB(p.x, p.y));
+//		}
+		//DibujadorImagenes DI = new DibujadorImagenes(imgsmt);
+		
+
+		/**Dibujador de imagen*/
+		DibujadorImagenes DI = new DibujadorImagenes(transformada);
+		
+		
 		JFrame f = new JFrame("Load Image Sample");
 		
 		f.addWindowListener(new WindowAdapter() {

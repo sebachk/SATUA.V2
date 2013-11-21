@@ -14,6 +14,7 @@ public abstract class HistogramaRGB extends Histograma {
 		fillVector(img);
 		x = 10;
 		y = 350;
+		this.setQueartiles();
 	}
 	
 	public void fillVector(Object o){

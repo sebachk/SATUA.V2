@@ -21,5 +21,5 @@ public class DibujadorImagenes extends Component {
 	public Dimension getPreferredSize() {
 		return new Dimension(800, 600);
 	
-}
+	}
 }

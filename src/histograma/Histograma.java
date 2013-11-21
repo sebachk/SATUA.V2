@@ -16,16 +16,28 @@ public abstract class Histograma extends Component{
 	protected Vector<Integer> intensidades;
 	protected int x;
 	protected int y;
-	protected int moda;//valor mas repetido
+	protected int Maximo;//valor mas repetido
+	protected int moda;
 	protected int altura;
 	
 	protected double suma;//valor total
 	protected int mediana; //el valor parado al medio
 	protected double totalValores;
 	
+	private int pixel50;
+	private int pixel25;
+	private int pixel75;
+	
+	public void setMuestreo(int h,int b){
+		pixel50=(int)(h*b*0.5);
+		pixel25=(int)(h*b*0.25);
+		pixel75=(int)(h*b*0.75);
+	}
+	
 	
 	public Histograma(){
-		moda=0;
+		Maximo=0;
+		moda=-1;
 		x=0;
 		y=0;
 		altura=300; //valor por defecto
@@ -40,7 +52,10 @@ public abstract class Histograma extends Component{
 	protected void addValue(int index)
 	{
 		int v= intensidades.elementAt(index)+1;
-		if(moda<v)moda=v;
+		if(Maximo<v){
+			Maximo=v;
+			moda=index;
+			}
 		intensidades.set(index, v);
 		totalValores++;
 		suma+=index;
@@ -55,7 +70,7 @@ public abstract class Histograma extends Component{
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setStroke(new BasicStroke(1.0f));
 		Shape rect;
-		if(moda==0) moda=1;
+		if(Maximo==0) Maximo=1;
 		g2.setColor(Color.black);
 		
 		//Ordenadas y absisas
@@ -66,7 +81,7 @@ public abstract class Histograma extends Component{
 		for(int i=0;i<intensidades.size();i++){
 			
 			float h=intensidades.elementAt(i)*altura; //300 es un valor para achatamiento
-			h/=moda;
+			h/=Maximo;
 			rect = new Rectangle2D.Float((float)x+i,(float)y-h,1,h);
 		    g2.fill(rect);
 		}
@@ -80,37 +95,52 @@ public abstract class Histograma extends Component{
 		g.drawString("128",x+128,y+12);
 		g.drawString("255", x+255, y+12);
 		g.drawString("10", x+10, y+12);
-		g.drawString("20",x+20,y+12);
 		g.drawString("30", x+30, y+12);
 		g.drawString("Moda:"+moda+"", x, y+40);
+		g.drawString("Promedio:"+this.getMedia()+"", x, y+80);
+		g.drawString("q1:"+pixel25+"", x, y+100);
+		g.drawString("mediana:"+pixel50+"", x, y+120);
+		g.drawString("q3:"+pixel75+"", x, y+140);
+		
 	}
 	
 	
-	public Dimension getPreferredSize() {return new Dimension(275, 450);}
+	public Dimension getPreferredSize() {return new Dimension(275, 600);}
 	
 	
 	public int getMedia(){
 		return (int)(suma/totalValores);
 	}
 	
-	@SuppressWarnings("unused")
-	public int getMediana(){
+	public void setQueartiles(){
 		double mitad=0;
+		pixel25=-1;
+		pixel50=-1;
+		pixel75=-1;
 		if(mediana==-1){
 			for(int i=0;i<intensidades.size();i++){
 				mitad+=intensidades.elementAt(i);
-				if(mitad>totalValores)
-					mediana=i;
-				break;
+				if(mitad*4>totalValores && pixel25==-1)
+					pixel25=i;
+				else if(mitad*2>totalValores && pixel50==-1)
+					pixel50=i;
+				
+				else if(mitad*100/97>totalValores && pixel75==-1){
+						pixel75=i;
+						break;
+				}
 			}
 		}
-		
-		return mediana;
 	}
 	
 	public int getModa(){
-		return moda;
+		return Maximo;
 	}
 	
+	
+	public int getpercentil(){
+		return pixel75;
+	}
+
 	
 }

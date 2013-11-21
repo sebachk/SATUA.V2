@@ -52,13 +52,7 @@ private Vector<Matriz2D<Float>> transfs; //transformaciones
 		return (int)v;	
 	}
 	
-	public boolean OutOfBounds(BufferedImage img,int i,int j){
-		if(i<0 || j<0) return true;
-		
-		if(i>=img.getWidth() || j>=img.getHeight()) return true;
-		
-		return false;
-	}
+	
 	
 }
 
